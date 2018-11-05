@@ -76,6 +76,23 @@ noise(double x, double y)
   return noise(x, y, 0.0);
 }
 
+double
+octave_noise(double x, double y, int octaves)
+{
+  double result = 0.0;
+  double amp = 1.0;
+
+  for (auto i = 0; i < octaves; ++i)
+  {
+    result += noise(x, y) * amp;
+    x *= 2.0;
+    y *= 2.0;
+    amp *= 0.5;
+  }
+
+  return result;
+}
+
 int
 run(const std::string& output, const bool verbose)
 {
@@ -89,14 +106,17 @@ run(const std::string& output, const bool verbose)
 
 
   for (auto j = 0; j < 512; ++j)
+  {
     for (auto i = 0; i < 512; ++i)
     {
-      double noised = noise(i / 512.0 / 0.2, j / 512.0 / 0.2);
-      std::cout << noised << std::endl;
-      std::uint8_t uint = (static_cast<std::uint8_t>(noised * 255.0 + 0.5) + 255 + 255) % 255;
-      std::cout << static_cast<unsigned>(uint) << std::endl;
+      double noised = noise(i / (512.0 / 5), j / (512.0 / 5)) * 0.5 + 0.5;
+//      std::cout << noised << ' ';
+      std::uint8_t uint = (static_cast<std::uint8_t>(noised * 255.0 + 0.5)) % 255;
+//      std::cout << static_cast<unsigned>(uint) << ' ';
       img.at<cv::Vec3b>(i, j)[0] = img.at<cv::Vec3b>(i, j)[1] = img.at<cv::Vec3b>(i, j)[2] = uint;
     }
+    std::cout << std::endl;
+  }
 
   cv::imwrite(output, img);
   if (verbose)
