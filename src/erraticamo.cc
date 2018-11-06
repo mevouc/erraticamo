@@ -93,6 +93,13 @@ octave_noise(double x, double y, int octaves)
   return result;
 }
 
+std::uint8_t binarize(std::uint8_t val, std::uint8_t treshold)
+{
+  if (val < treshold)
+    return 0;
+  return 255;
+}
+
 int
 run(const std::string& output, const bool verbose)
 {
@@ -113,7 +120,7 @@ run(const std::string& output, const bool verbose)
 //      std::cout << noised << ' ';
       std::uint8_t uint = (static_cast<std::uint8_t>(noised * 255.0 + 0.5)) % 255;
 //      std::cout << static_cast<unsigned>(uint) << ' ';
-      img.at<cv::Vec3b>(i, j)[0] = img.at<cv::Vec3b>(i, j)[1] = img.at<cv::Vec3b>(i, j)[2] = uint;
+      img.at<cv::Vec3b>(i, j)[0] = img.at<cv::Vec3b>(i, j)[1] = img.at<cv::Vec3b>(i, j)[2] = binarize(uint, 128);
     }
     std::cout << std::endl;
   }
