@@ -3,6 +3,7 @@
 #include <iostream>
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
+#include <random>
 #include <sstream>
 #include <unordered_set>
 
@@ -22,7 +23,27 @@ static std::int32_t permutation[] = { 151,160,137,91,90,15,
    251,34,242,193,238,210,144,12,191,179,162,241, 81,51,145,235,249,14,239,107,
    49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127, 4,150,254,
    138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180
-   };
+};
+
+
+static void permut_p()
+{
+  for (int i = 0; i < 256 ; ++i)
+    p[256+i] = p[i] = permutation[i];
+}
+
+
+static void reseed()
+{
+  std::random_device r;
+  std::default_random_engine e(r());
+  std::uniform_int_distribution<std::int32_t> uniform_dist(0, 256);
+
+  for (auto i = 0; i < 256; ++i)
+    permutation[i] = uniform_dist(e);
+
+  permut_p();
+}
 
 static double Fade(double t)
 {
@@ -108,18 +129,16 @@ run(const std::string& output, const bool verbose)
 
   cv::Mat img(512, 512, CV_8UC3);
 
-  for (int i=0; i < 256 ; i++)
-    p[256+i] = p[i] = permutation[i];
-
+  reseed();
 
   for (auto j = 0; j < 512; ++j)
   {
     for (auto i = 0; i < 512; ++i)
     {
-      double noised = noise(i / (512.0 / 5), j / (512.0 / 5)) * 0.5 + 0.5;
-//      std::cout << noised << ' ';
+      double noised = octave_noise(i / (512.0 / 8), j / (512.0 / 8), 3) * 0.5 + 0.5;
+      //      std::cout << noised << ' ';
       std::uint8_t uint = (static_cast<std::uint8_t>(noised * 255.0 + 0.5)) % 255;
-//      std::cout << static_cast<unsigned>(uint) << ' ';
+      //      std::cout << static_cast<unsigned>(uint) << ' ';
       img.at<cv::Vec3b>(i, j)[0] = img.at<cv::Vec3b>(i, j)[1] = img.at<cv::Vec3b>(i, j)[2] = binarize(uint, 128);
     }
     std::cout << std::endl;
