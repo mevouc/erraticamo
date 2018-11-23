@@ -1,9 +1,12 @@
+#include <cmath>
+#include <random>
+
 #include "noise.hh"
 
 erraticamo::Noise::Noise(size_t size)
   : size_((size / 2) * 2)
-  , p_(new std::int32_t[size_];)
-  , permutations_(new std::int32_t[size_ / 2])
+  , p_(size_)
+  , permutations_(size_ / 2)
 {
   reseed_permutations_();
 }
@@ -28,10 +31,10 @@ erraticamo::Noise::compute_noise(double x, double y)
   const std::int32_t BA = p_[B];
   const std::int32_t BB = p_[B + 1];
 
-  return s_lerp_(s_lerp_(v, s_lerp_(u, s_grad_(p_[AA], x, y),
-                                       s_grad_(p_[BA], x - 1, y)),
-                            s_lerp_(u, s_grad_(p_[AB], x, y - 1),
-                                       s_grad_(p_[BB], x - 1, y - 1)));
+  return s_lerp_(v, s_lerp_(u, s_grad_(p_[AA], x, y),
+                               s_grad_(p_[BA], x - 1, y)),
+                    s_lerp_(u, s_grad_(p_[AB], x, y - 1),
+                               s_grad_(p_[BB], x - 1, y - 1)));
 }
 
 
@@ -52,20 +55,22 @@ erraticamo::Noise::compute_octave_noise(double x, double y, int octaves)
   return result;
 }
 
+void
 erraticamo::Noise::permut_to_p_()
 {
-  for (auto i = 0; i < size_ / 2 ; ++i)
-    p_[size_ / 2 + i] = p_[i] = permutation_[i];
+  for (auto i = 0u; i < size_ / 2 ; ++i)
+    p_[size_ / 2 + i] = p_[i] = permutations_[i];
 }
 
+void
 erraticamo::Noise::reseed_permutations_()
 {
   std::random_device r;
   std::default_random_engine e(r());
   std::uniform_int_distribution<std::int32_t> uniform_dist(0, size_ / 2);
 
-  for (auto i = 0; i < size_ / 2; ++i)
-    permutation[i] = uniform_dist(e);
+  for (auto i = 0u; i < size_ / 2; ++i)
+    permutations_[i] = uniform_dist(e);
 
   permut_to_p_();
 }

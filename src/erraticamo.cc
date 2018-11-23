@@ -1,14 +1,15 @@
 #include <boost/program_options.hpp>
-#include <cmath>
 #include <iostream>
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
-#include <random>
 #include <sstream>
 #include <unordered_set>
 
+#include "camo-generator.hh"
+
 namespace po = boost::program_options;
 
+/*
 static std::int32_t p[512];
 static std::int32_t permutation[] = { 151,160,137,91,90,15,
    131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
@@ -119,6 +120,7 @@ std::uint8_t binarize(std::uint8_t val, std::uint8_t treshold)
     return 0;
   return 255;
 }
+*/
 
 int
 run(const std::string& output, const bool verbose)
@@ -126,6 +128,11 @@ run(const std::string& output, const bool verbose)
   if (verbose)
     std::cout << "Output file is: '" << output << "'" << std::endl;
 
+  auto generator = erraticamo::CamoGenerator();
+
+  auto img = generator();
+
+  /*
   cv::Mat img(512, 512, CV_8UC3);
 
   reseed();
@@ -142,6 +149,7 @@ run(const std::string& output, const bool verbose)
     }
     std::cout << std::endl;
   }
+  */
 
   cv::imwrite(output, img);
   if (verbose)

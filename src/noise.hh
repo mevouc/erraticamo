@@ -1,5 +1,9 @@
 #pragma once
 
+# include <cstddef>
+# include <cstdint>
+# include <vector>
+
 # define DEFAULT_OCTAVES 3
 
 namespace erraticamo
@@ -22,7 +26,7 @@ namespace erraticamo
     void reseed_permutations_();
 
     size_t size_;
-    std::int32_t p_[];
-    std::int32_t permutations_[];
-  }
+    std::vector<std::int32_t> p_;
+    std::vector<std::int32_t> permutations_;
+  };
 }

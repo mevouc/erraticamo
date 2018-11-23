@@ -13,7 +13,11 @@ include_directories(src/
                     ${Boost_INCLUDE_DIRS}
                     ${OpenCV_INCLUDE_DIRS})
 
-set(SRC src/erraticamo.cc)
+set(SRC src/erraticamo.cc
+        src/camo-generator.cc
+        src/layer.cc
+        src/noise.cc
+        src/utils.cc)
 
 add_executable(erraticamo ${SRC})
 target_link_libraries(erraticamo ${Boost_LIBRARIES})

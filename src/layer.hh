@@ -1,6 +1,7 @@
 #pragma once
 
 # include <opencv2/core.hpp>
+# include "noise.hh"
 
 namespace erraticamo
 {
@@ -9,8 +10,10 @@ namespace erraticamo
   public:
     Layer(size_t width, size_t height, double treshold = 0.5);
 
+    std::uint8_t at(size_t i, size_t j) const;
+
   private:
-    const cv::Mat layer_;
-    const Noise noise_;
-  }
+    cv::Mat layer_;
+    Noise noise_;
+  };
 }
