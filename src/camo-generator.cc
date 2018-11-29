@@ -3,14 +3,19 @@
 #include "camo-generator.hh"
 #include "utils.hh"
 
+#define LOW_TRESHOLD (1. / 4.)
+#define HIGH_TRESHOLD (1. / 2.)
+
 erraticamo::CamoGenerator::CamoGenerator(size_t nb_layers, size_t width,
                                          size_t height, cv::Vec3b color)
   : nb_layers_(nb_layers)
-  , img_(width, height, CV_8UC3, utils::complementary_color(color))
+  , background_color_(utils::complementary_color(color))
+  , img_(width, height, CV_8UC3, background_color_)
   , colors_(nb_layers + 1)
 {
   generate_colors_(color);
 }
+
 
 const cv::Mat&
 erraticamo::CamoGenerator::operator()()
