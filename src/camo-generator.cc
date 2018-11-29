@@ -33,8 +33,14 @@ erraticamo::CamoGenerator::generate_()
   const auto bottom_layer = Layer(img_.cols, img_.rows);
   add_layer_(bottom_layer);
 
+  double interval = HIGH_TRESHOLD - LOW_TRESHOLD;
+  double step = interval / (nb_layers_ - 1);
+
   for (auto i = 1u; i < nb_layers_; ++i)
-    add_layer_(Layer(img_.cols, img_.rows), i); // TODO: change treshold
+  {
+    double treshold = HIGH_TRESHOLD - step * (i - 1);
+    add_layer_(Layer(img_.cols, img_.rows, treshold), i);
+  }
 }
 
 void
@@ -52,13 +58,11 @@ erraticamo::CamoGenerator::add_layer_(const Layer layer, size_t layer_index)
 void
 erraticamo::CamoGenerator::generate_colors_(const cv::Vec3b base_color)
 {
-  //std::uint8_t interval = std::abs(base_color - utils::complementary(colors));
-  //std::uint8_t step = 256 / nb_layers_;
   (void)base_color;
-  std::uint8_t tmp = 255u;
 
-  for (auto& color : colors_)
+  for (auto i = 0u; i < colors_.size(); ++i)
   {
-    color[0] = color[1] = color[2] = utils::uniform_random<std::uint8_t>(tmp); // TODO: change colors
+    auto& color = colors_.at(i);
+    color[0] = color[1] = color[2] = 80 * (i + 1); // TODO: use base color
   }
 }
