@@ -1,11 +1,6 @@
 #include <boost/program_options.hpp>
-#include <cmath>
 #include <iostream>
-#include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
-#include <random>
-#include <sstream>
-#include <unordered_set>
 
 #include "camo-generator.hh"
 
@@ -17,7 +12,7 @@ run(const std::string& output, const bool verbose)
   if (verbose)
     std::cout << "Output file is: '" << output << "'" << std::endl;
 
-  auto generator = erraticamo::CamoGenerator();
+  auto generator = erraticamo::CamoGenerator(3);
 
   auto img = generator();
 

@@ -1,11 +1,12 @@
 #include <cassert>
 
 #include "camo-generator.hh"
+#include "utils.hh"
 
 erraticamo::CamoGenerator::CamoGenerator(size_t nb_layers, size_t width,
                                          size_t height, cv::Vec3b color)
   : nb_layers_(nb_layers)
-  , img_(width, height, CV_8UC3, { 0, 0, 0 })
+  , img_(width, height, CV_8UC3, utils::complementary_color(color))
   , colors_(nb_layers + 1)
 {
   generate_colors_(color);
@@ -46,6 +47,13 @@ erraticamo::CamoGenerator::add_layer_(const Layer layer, size_t layer_index)
 void
 erraticamo::CamoGenerator::generate_colors_(const cv::Vec3b base_color)
 {
+  //std::uint8_t interval = std::abs(base_color - utils::complementary(colors));
+  //std::uint8_t step = 256 / nb_layers_;
+  (void)base_color;
+  std::uint8_t tmp = 255u;
+
   for (auto& color : colors_)
-    color = base_color; // TODO: change colors
+  {
+    color[0] = color[1] = color[2] = utils::uniform_random<std::uint8_t>(tmp); // TODO: change colors
+  }
 }

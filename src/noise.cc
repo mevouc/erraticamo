@@ -1,7 +1,7 @@
 #include <cmath>
-#include <random>
 
 #include "noise.hh"
+#include "utils.hh"
 
 erraticamo::Noise::Noise(size_t size)
   : size_((size / 2) * 2)
@@ -65,12 +65,12 @@ erraticamo::Noise::permut_to_p_()
 void
 erraticamo::Noise::reseed_permutations_()
 {
-  std::random_device r;
-  std::default_random_engine e(r());
-  std::uniform_int_distribution<std::int32_t> uniform_dist(0, size_ / 2);
+//  std::random_device r;
+//  std::default_random_engine e(r());
+//  std::uniform_int_distribution<std::int32_t> uniform_dist(0, size_ / 2);
 
   for (auto i = 0u; i < size_ / 2; ++i)
-    permutations_[i] = uniform_dist(e);
+    permutations_[i] = utils::uniform_random<std::int32_t>(size_ / 2);
 
   permut_to_p_();
 }
