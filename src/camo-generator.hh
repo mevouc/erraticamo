@@ -17,11 +17,13 @@ namespace erraticamo
   private:
     void generate_();
 
-    void add_layer_(const Layer layer);
+    void add_layer_(const Layer layer, size_t layer_index = 0);
+    
+    void generate_colors_(const cv::Vec3b base_color);
 
   private:
     const size_t nb_layers_;
     cv::Mat img_;
-    const cv::Vec3b color_;
+    std::vector<cv::Vec3b> colors_;
   };
 }

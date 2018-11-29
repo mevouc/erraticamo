@@ -1,7 +1,9 @@
 #include <boost/program_options.hpp>
+#include <cmath>
 #include <iostream>
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
+#include <random>
 #include <sstream>
 #include <unordered_set>
 
