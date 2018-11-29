@@ -7,12 +7,12 @@
 namespace po = boost::program_options;
 
 int
-run(const std::string& output, const bool verbose)
+run(const std::string& output, const std::size_t nb_layers, const bool verbose)
 {
   if (verbose)
     std::cout << "Output file is: '" << output << "'" << std::endl;
 
-  auto generator = erraticamo::CamoGenerator(3);
+  auto generator = erraticamo::CamoGenerator(nb_layers);
 
   auto img = generator();
 
@@ -35,6 +35,7 @@ main(int argc, char* argv[])
     ("help,h", "Display this message")
     ("output,o", po::value<std::string>(), "Output image")
     ("verbose,v", "Enable useful information output")
+    ("layers,l", po::value<std::size_t>(), "Number of color layers, 3 by default")
     ;
 
   po::variables_map vm;
@@ -50,21 +51,24 @@ main(int argc, char* argv[])
     return 1;
   }
 
-  std::string output("camo.tiff");
-
-  const bool verbose = vm.count("verbose");
-
   if (vm.count("help"))
   {
     std::cout << desc << std::endl
               << "Examples:" << std::endl
               << "  erraticamo -o out.png --verbose" << std::endl
-              << "  erraticamo -o example.tiff" << std::endl;
+              << "  erraticamo -o example.tiff --layers 1" << std::endl;
     return 1;
   }
 
+  const bool verbose = vm.count("verbose");
+
+  std::string output("camo.tiff");
   if (vm.count("output"))
     output = vm["output"].as<std::string>();
 
-  return run(output, verbose);
+  std::size_t nb_layers = 3;
+  if (vm.count("layers"))
+    nb_layers = vm["layers"].as<std::size_t>();
+
+  return run(output, nb_layers, verbose);
 }
